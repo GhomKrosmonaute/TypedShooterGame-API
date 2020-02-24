@@ -10,11 +10,12 @@ api.use(
     ( req, res, next ) => {
         res.setHeader("Access-Control-Allow-Origin", "*")
         res.setHeader("Access-Control-Allow-Header", "Content-Type")
-        next()
+        if(req.user) return next()
+        res.status(500).json({error:'login is required'});
     },
     router
 )
 
 api.listen( port, () => {
-    console.log('Connected to localhost:' + port)
+    console.log( 'Connected to localhost:' + port )
 })

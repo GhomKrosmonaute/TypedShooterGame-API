@@ -1,50 +1,38 @@
 
-const fs = require('fs').promises
 const path = require('path')
 const db = require('better-sqlite3')(path.resolve(__dirname,'../data/sqlite.db'))
+const views = require('./views')
 
 db.prepare(`
-    CREATE TABLE IF NOT EXISTS messages (
+    CREATE TABLE IF NOT EXISTS user (
         id integer PRIMARY KEY,
+        pseudo varchar(64) NOT NULL,
+        password varchar(64) NOT NULL,
+        token varchar(2048) NOT NULL
+    )
+`).run()
+db.prepare(`
+    CREATE TABLE IF NOT EXISTS message (
+        id integer PRIMARY KEY,
+        user_id integer NOT NULL,
         content varchar(150) NOT NULL,
-        pseudo varchar(64) NOT NULL
+        CONSTRAIN fk_user_message
+            FOREIGN KEY (user_id)
+            REFERENCES user(id)
     )
 `).run()
 
 module.exports = {
-    home: async ( req, res ) => {
+    homePage: async ( req, res ) => {
         res.setHeader('Content-Type','text/html')
-        const homePage = await fs.readFile(
-            path.resolve(__dirname,'../views/home.html'), 
-            { encoding: 'utf8' }
-        )
-        res.status(200).send(homePage)
+        res.status(200).send(views.home)
     },
-    deleteMessage: ( req, res ) => {
-
-        db.prepare('DELETE FROM messages WHERE id=?').run(req.body.id)
-        res.status(200).json({ message: 'Your message has been deleted.' })
-
+    loginPage: async ( req, res ) => {
+        res.setHeader('Content-Type','text/html')
+        res.status(200).send(views.login)
     },
-    getMessages: ( req, res ) => {
-
-        res.status(200).json( db.prepare('SELECT * FROM messages').all() )
-
-    },
-    postMessage: ( req, res ) => {
-
-        const neededArgs = [ 'content', 'pseudo' ]
-
-        for(const arg of neededArgs){
-            if(!req.body[arg])
-            return res.status(422).json({ error: `Missing ${arg} argument.` })
-        }
-
-        db.prepare('INSERT INTO messages (content, pseudo) VALUES (?,?)').run(
-            req.body.content,
-            req.body.pseudo
-        )
-
-        res.status(200).json({ message: 'Your message has been posted.' })
-    }
+    login: require('./events/login').bind(db),
+    deleteMessage: require('./events/deleteMessage').bind(db),
+    getMessages: require('./events/getMessages').bind(db),
+    postMessage: require('./events/postMessage').bind(db)
 }

@@ -1,0 +1,14 @@
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+h1 {
+    padding: 10px;
+}
+body {
+    color: #c2c2c2;
+    background-color: #222;
+}
