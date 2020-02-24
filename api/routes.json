@@ -1,0 +1,7 @@
+{
+    "GET/": "home",
+    "GET/home": "home",
+    "GET/messages": "getMessages",
+    "POST/message": "postMessage",
+    "DELETE/message": "deleteMessage"
+}
