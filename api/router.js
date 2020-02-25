@@ -6,7 +6,7 @@ const routes = require('./routes.json')
 const router = express.Router()
 
 for(const route in routes){
-    const [ fullmatch, method, path ] = /^([A-Z]+)(.+)$/.exec(route)
+    const [ method, path ] = route.split(/\s+/)
     const controllerName = routes[route]
     router.route(path)[method.toLowerCase()](( req, res ) => {
         return controllers[controllerName]( req, res )

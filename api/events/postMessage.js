@@ -8,6 +8,11 @@ module.exports = function( req, res ){
         return res.status(422).json({ error: `Missing ${arg} argument.`, neededArgs })
     }
 
+    const user = this.prepare('SELECT * FROM user WHERE token=?').get(req.body.token)
+
+    if(!user)
+    return res.status(422).json({ error: 'Invalid token.' })
+
     this.prepare('INSERT INTO message (content, user_id) VALUES (?,?)').run(
         req.body.content,
         user.id

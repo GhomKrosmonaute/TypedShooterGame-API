@@ -15,10 +15,11 @@ db.prepare(`
     CREATE TABLE IF NOT EXISTS message (
         id integer PRIMARY KEY,
         user_id integer NOT NULL,
-        content varchar(150) NOT NULL,
-        CONSTRAIN fk_user_message
+        content varchar(164) NOT NULL,
+        CONSTRAINT fk_user_message
             FOREIGN KEY (user_id)
             REFERENCES user(id)
+            ON DELETE CASCADE
     )
 `).run()
 

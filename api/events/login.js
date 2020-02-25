@@ -22,16 +22,25 @@ module.exports = async function( req, res ){
             password: await bcrypt.hash( req.body.password, 8 )
         }
 
-        const token = jwt.sign( user, config.secret )
+        user.token = jwt.sign( user, config.secret )
 
         this.prepare('INSERT INTO user (pseudo, password, token) VALUES (?,?,?)').run(
             user.pseudo,
             user.password,
-            token
+            user.token
         )
+
+    }else{
+
+        const password = await bcrypt.hash( req.body.password, 8 )
+
+        console.log(user.password,password)
+
+        if(user.password !== password)
+        return res.status(500).json({ error: `Invalid password for this user` })
 
     }
 
-    res.status(200).json({ message: 'You have successfully logged in !', token: user.token })
+    res.status(200).json({ message: 'Yay !', token: user.token })
 
 }

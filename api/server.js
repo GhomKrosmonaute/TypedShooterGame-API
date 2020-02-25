@@ -10,8 +10,7 @@ api.use(
     ( req, res, next ) => {
         res.setHeader("Access-Control-Allow-Origin", "*")
         res.setHeader("Access-Control-Allow-Header", "Content-Type")
-        if(req.user) return next()
-        res.status(500).json({error:'login is required'});
+        next()
     },
     router
 )

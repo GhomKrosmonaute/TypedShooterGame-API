@@ -1,3 +1,4 @@
 {
-    "secret":"secret"
+    "secret":"secret",
+    "admin":"admin"
 }
