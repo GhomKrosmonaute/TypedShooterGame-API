@@ -7,7 +7,7 @@
     },
     {
         "path": "/score",
-        "method": "POST",
+        "method": "PATCH",
         "needToken": true,
         "controller": "setScore"
     },
@@ -21,6 +21,18 @@
         "path": "/leaderboard",
         "method": "GET",
         "needToken": true,
-        "controller": "leaderboard"
+        "controller": "leaderBoard"
+    },
+    {
+        "path": "/profile",
+        "method": "GET",
+        "meedToken": true,
+        "controller": "getProfile"
+    },
+    {
+        "path": "/profile",
+        "method": "PATCH",
+        "meedToken": true,
+        "controller": "setProfile"
     }
 ]

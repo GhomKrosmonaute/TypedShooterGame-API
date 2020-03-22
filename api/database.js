@@ -1,4 +1,4 @@
-const { createConnection } = require('mysql2')
+const { createConnection } = require('mysql2');
 const config = require('../data/config.json')
 
 const db = createConnection(config.database)

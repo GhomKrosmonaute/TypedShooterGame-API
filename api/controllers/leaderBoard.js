@@ -1,5 +1,5 @@
 
-module.exports = async function (req, res) {
+module.exports = async function getLeaderBoard(req, res) {
 
     const id = req.player.id
     const leaderBoard = {

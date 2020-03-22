@@ -1,11 +1,11 @@
 
-const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 const Grecaptcha = require('grecaptcha')
+const { hash } = require('../../utils')
 const config = require('../../data/config.json')
 const client = new Grecaptcha(config.secret)
 
-module.exports = async function( req, res ){
+module.exports = async function login( req, res ){
 
     const neededArgs = [ 'username', 'password', 'token' ]
 
@@ -48,8 +48,4 @@ module.exports = async function( req, res ){
 
 function newToken( player ){
     return jwt.sign( JSON.stringify(player), config.secret )
-}
-
-function hash( password ){
-    return crypto.createHash('sha256').update( password + config.secret ).digest('hex')
 }
