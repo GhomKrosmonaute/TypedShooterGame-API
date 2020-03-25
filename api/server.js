@@ -1,23 +1,39 @@
 
 const api = require('express')()
+const Captcha = require('grecaptcha')
 const path = require('path')
 const jwt = require('jsonwebtoken')
+const expressIp = require('express-ip')
+const { IpFilter } = require('express-ipfilter')
 const bodyParser = require('body-parser')
 const cors = require('cors')
-
 const db = require('./database')
+
 const routes = require('./routes')
 const config = require('../data/config')
 
+const captcha = new Captcha(config.secret)
+
+const whitelistDomains = ['https://camilleabella.github.io','http://localhost:9000']
+const blackListIP = []
+
 api.use(
-    cors(),
-    bodyParser.json(), 
+    cors({
+        origin: function (origin, callback) {
+            if (typeof origin === 'string' && whitelistDomains.includes(origin.toLowerCase()))
+                callback(null, true)
+            else callback('Intrusion: '+String(origin))
+        }
+    }),
+    IpFilter(blackListIP),
+    expressIp().getIpInfoMiddleware,
+    bodyParser.json(),
     bodyParser.urlencoded({ extended: true })
 )
 
 for(const route of routes){
     api[route.method.toLowerCase()]( route.path,
-        route.needToken ? needToken : (req,res,next) => next(),
+        route.needToken ? needToken : (req,res,next) => next(), needCaptcha,
         require('./controllers/' + route.controller).bind(db)
     )
 }
@@ -35,4 +51,10 @@ function needToken( req, res, next ){
         req.player = player
         next()
     })
+}
+
+async function needCaptcha( req, res, next ){
+    if(!req.body.token) return res.status(422).json({ error: `Missing reCAPTCHA token.` })
+    if (await captcha.verify(req.body.token)) next()
+    else res.status(500).json({ error: `reCAPTCHA token denied.` })
 }

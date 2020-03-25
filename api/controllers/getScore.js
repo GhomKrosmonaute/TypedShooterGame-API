@@ -1,5 +1,5 @@
 
-module.exports = async function getScore(req, res) {
+async function getScore(req, res) {
 
     const id = req.player.id
 
@@ -8,3 +8,5 @@ module.exports = async function getScore(req, res) {
     res.status(200).json({ score })
 
 }
+
+module.exports = getScore

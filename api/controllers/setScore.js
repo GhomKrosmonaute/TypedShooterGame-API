@@ -1,5 +1,5 @@
 
-module.exports = async function setScore(req, res) {
+async function setScore(req, res) {
 
     const id = req.player.id
     const score = req.body.score
@@ -9,3 +9,5 @@ module.exports = async function setScore(req, res) {
     res.sendStatus(200)
 
 }
+
+module.exports = setScore
