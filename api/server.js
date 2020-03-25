@@ -17,6 +17,8 @@ const captcha = new Captcha(config.secret)
 const whitelistDomains = ['https://camilleabella.github.io','http://localhost:9000']
 const blackListIP = []
 
+api.next = (req,res,next) => next()
+
 api.use(
     cors({
         origin: function (origin, callback) {
@@ -33,7 +35,8 @@ api.use(
 
 for(const route of routes){
     api[route.method.toLowerCase()]( route.path,
-        route.needToken ? needToken : (req,res,next) => next(), needCaptcha,
+        route.needToken ? needToken : api.next,
+        route.method === 'PATCH' ? needCaptcha : api.next,
         require('./controllers/' + route.controller).bind(db)
     )
 }
