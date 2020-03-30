@@ -1,7 +1,8 @@
 
 module.exports = async function getProfile(req, res) {
 
-    console.log(req.player) // undefined
+    if(!req.player) return res.status(500).json({ error: 'PLS' })
+
     res.status(200).json(req.player)
 
 }

@@ -26,13 +26,19 @@
     {
         "path": "/profile",
         "method": "GET",
-        "meedToken": true,
+        "needToken": true,
         "controller": "getProfile"
     },
     {
         "path": "/profile",
         "method": "PATCH",
-        "meedToken": true,
+        "needToken": true,
         "controller": "setProfile"
+    },
+    {
+        "path" : "/profile",
+        "method": "DELETE",
+        "needToken": true,
+        "controller": "deleteProfile"
     }
 ]

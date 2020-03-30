@@ -18,15 +18,14 @@ module.exports = async function login( req, res ){
 
         player = {
             username: req.body.username,
-            password: hash( req.body.password ),
-            ip: req.ipInfo.ip
+            password: hash( req.body.password )
         }
 
         try{
-            const { insertId } = await this.exec('INSERT INTO player (username, password, ip) VALUES (?,?,?)',[player.username,player.password,player.ip])
+            const { insertId } = await this.exec('INSERT INTO player (username, password) VALUES (?,?)',[player.username,player.password])
             player.id = insertId
         }catch(error){
-            return res.status(501).json({ error: `You may already have an account using this ip address` })
+            return res.status(501).json({ error: `The username is already used` })
         }
 
     }else{

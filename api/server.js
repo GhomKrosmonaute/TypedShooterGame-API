@@ -1,10 +1,7 @@
 
 const api = require('express')()
 const Captcha = require('grecaptcha')
-const path = require('path')
 const jwt = require('jsonwebtoken')
-const expressIp = require('express-ip')
-const { IpFilter } = require('express-ipfilter')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const db = require('./database')
@@ -14,21 +11,10 @@ const config = require('../data/config')
 
 const captcha = new Captcha(config.secret)
 
-const whitelistDomains = ['https://camilleabella.github.io','http://localhost:9000']
-const blackListIP = []
-
 api.next = (req,res,next) => next()
 
 api.use(
-    cors({
-        origin: function (origin, callback) {
-            if (typeof origin === 'string' && whitelistDomains.includes(origin.toLowerCase()))
-                callback(null, true)
-            else callback('Intrusion: '+String(origin))
-        }
-    }),
-    IpFilter(blackListIP),
-    expressIp().getIpInfoMiddleware,
+    cors(),
     bodyParser.json(),
     bodyParser.urlencoded({ extended: true })
 )
@@ -51,7 +37,8 @@ function needToken( req, res, next ){
     if(!token) return res.status(401).json({error: 'Access token is needed'})
     jwt.verify( token, config.secret, { ignoreExpiration: true }, (error, player) => {
         if(error) return res.status(403).json({error: 'Access token is invalid'})
-        req.player = player
+        if(!player) return res.status(300).json({error: 'Token value is empty!'})
+        req.player = player 
         next()
     })
 }
