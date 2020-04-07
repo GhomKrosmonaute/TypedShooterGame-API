@@ -6,16 +6,16 @@
         "controller": "login"
     },
     {
-        "path": "/score",
-        "method": "PATCH",
+        "path": "/result",
+        "method": "POST",
         "needToken": true,
-        "controller": "setScore"
+        "controller": "registerResult"
     },
     {
-        "path": "/score",
+        "path": "/highscore",
         "method": "GET",
         "needToken": true,
-        "controller": "getScore"
+        "controller": "getHighScore"
     },
     {
         "path": "/leaderboard",
@@ -33,7 +33,7 @@
         "path": "/profile",
         "method": "PATCH",
         "needToken": true,
-        "controller": "setProfile"
+        "controller": "editProfile"
     },
     {
         "path" : "/profile",

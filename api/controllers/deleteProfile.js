@@ -9,3 +9,5 @@ async function deleteProfile( req, res ){
         .catch(()=>{res.sendStatus(500)})
 
 }
+
+module.exports = deleteProfile
